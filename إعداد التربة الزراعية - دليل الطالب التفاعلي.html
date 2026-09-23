@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>إعداد التربة الزراعية - دليل الطالب التفاعلي</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+:root{
+  --bg:#f6f4ee; --card:#ffffff; --ink:#22301b; --ink-soft:#5b6553;
+  --green-900:#1f3a1a; --green-800:#2c4b23; --green-700:#3a6130; --green-600:#4b7a3d;
+  --green-500:#5f9750; --green-100:#e4efdd; --gold:#c99a3c; --gold-dark:#a87d28;
+  --danger:#b03a2e; --danger-bg:#fbe9e7; --ok:#2c6e3e; --ok-bg:#e6f4ea;
+  --border:#e0ddd0; --radius:16px; --shadow:0 6px 24px rgba(30,40,20,.08);
+  --font: "Tahoma","Segoe UI",Arial,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#171d13; --card:#212b1a; --ink:#eef2e7; --ink-soft:#b7c2a9;
+    --green-100:#28361f; --border:#37452c; --shadow:0 6px 24px rgba(0,0,0,.4);
+    --danger-bg:#3a1f1c; --ok-bg:#1c3324;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#171d13; --card:#212b1a; --ink:#eef2e7; --ink-soft:#b7c2a9;
+  --green-100:#28361f; --border:#37452c; --shadow:0 6px 24px rgba(0,0,0,.4);
+  --danger-bg:#3a1f1c; --ok-bg:#1c3324;
+}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{
+  margin:0; background:var(--bg); color:var(--ink); font-family:var(--font);
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+  min-height:100%;
+}
+img,svg{max-width:100%}
+a{color:inherit}
+.wrap-x{overflow-x:auto}
+button{font-family:inherit; cursor:pointer}
+
+/* ===== Header ===== */
+header.top{
+  position:sticky; top:env(safe-area-inset-top,0px); z-index:50;
+  background:linear-gradient(135deg,var(--green-900),var(--green-700));
+  color:#fff; padding:14px 18px; box-shadow:var(--shadow);
+}
+.top-inner{display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; max-width:1200px; margin:0 auto;}
+.brand{display:flex; align-items:center; gap:10px; font-weight:800; font-size:1.15rem}
+.brand .leaf{font-size:1.6rem}
+.brand small{display:block; font-weight:400; opacity:.85; font-size:.72rem}
+nav.tabs{display:flex; gap:6px; flex-wrap:wrap}
+nav.tabs button{
+  background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.25); color:#fff;
+  padding:8px 14px; border-radius:999px; font-size:.85rem; transition:.15s;
+}
+nav.tabs button:hover{background:rgba(255,255,255,.28)}
+nav.tabs button.active{background:var(--gold); border-color:var(--gold); color:#2b1d05; font-weight:700}
+
+/* ===== Layout ===== */
+main{max-width:1200px; margin:0 auto; padding:18px 16px 60px}
+.grid-home{display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:16px; margin-top:18px}
+.hero{
+  background:var(--card); border:1px solid var(--border); border-radius:var(--radius);
+  padding:28px 24px; box-shadow:var(--shadow); text-align:center;
+}
+.hero h1{margin:0 0 8px; color:var(--green-800); font-size:1.7rem}
+.hero p{color:var(--ink-soft); margin:0; line-height:1.9}
+.card{
+  background:var(--card); border:1px solid var(--border); border-radius:var(--radius);
+  box-shadow:var(--shadow); padding:18px; transition:.15s;
+}
+.lesson-card{cursor:pointer; display:flex; flex-direction:column; gap:8px}
+.lesson-card:hover{transform:translateY(-3px)}
+.lesson-num{
+  width:38px; height:38px; border-radius:50%; background:var(--green-100); color:var(--green-800);
+  display:flex; align-items:center; justify-content:center; font-weight:800;
+}
+.lesson-card h3{margin:2px 0; color:var(--green-800); font-size:1.05rem}
+.lesson-card p{margin:0; color:var(--ink-soft); font-size:.88rem; line-height:1.7}
+.progress-bar{height:6px; background:var(--green-100); border-radius:4px; overflow:hidden; margin-top:4px}
+.progress-bar > span{display:block; height:100%; background:var(--green-500)}
+
+.cta-row{display:flex; gap:12px; flex-wrap:wrap; justify-content:center; margin-top:20px}
+.btn{
+  border:none; border-radius:12px; padding:12px 22px; font-weight:700; font-size:.95rem;
+  background:var(--green-700); color:#fff; box-shadow:var(--shadow);
+}
+.btn.gold{background:var(--gold); color:#2b1d05}
+.btn.ghost{background:transparent; border:1.5px solid var(--green-700); color:var(--green-700)}
+.btn.small{padding:8px 14px; font-size:.85rem; border-radius:9px}
+.btn:disabled{opacity:.5; cursor:not-allowed}
+
+/* ===== Lesson view ===== */
+.lesson-header{
+  display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;
+  margin-bottom:14px;
+}
+.lesson-header h2{color:var(--green-800); margin:0; font-size:1.4rem}
+.subtabs{display:flex; gap:8px; background:var(--green-100); padding:5px; border-radius:12px; width:fit-content}
+.subtabs button{
+  background:transparent; border:none; padding:9px 18px; border-radius:9px; font-weight:700; color:var(--green-800); font-size:.9rem;
+}
+.subtabs button.active{background:var(--card); box-shadow:0 2px 8px rgba(0,0,0,.08)}
+
+.section-block{margin-bottom:22px}
+.section-block h3{
+  color:var(--green-700); border-inline-start:5px solid var(--gold); padding-inline-start:10px; margin:0 0 10px;
+  font-size:1.1rem;
+}
+.section-block p, .section-block li{line-height:1.95; color:var(--ink); font-size:.96rem}
+.section-block ul, .section-block ol{padding-inline-start:22px; margin:8px 0}
+.note-box{
+  background:var(--green-100); border-radius:12px; padding:14px 16px; margin:10px 0; font-size:.9rem;
+  border-inline-start:4px solid var(--green-600);
+}
+.diagram-box{
+  background:var(--card); border:1px dashed var(--border); border-radius:14px; padding:14px;
+  text-align:center; margin:14px 0;
+}
+.diagram-box figcaption{color:var(--ink-soft); font-size:.82rem; margin-top:8px}
+.table-nice{width:100%; border-collapse:collapse; margin:10px 0; font-size:.88rem}
+.table-nice th, .table-nice td{border:1px solid var(--border); padding:8px 10px; text-align:center}
+.table-nice th{background:var(--green-100); color:var(--green-800)}
+.problem-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:12px}
+.problem-card{background:var(--card); border:1px solid var(--border); border-radius:14px; padding:14px}
+.problem-card h4{margin:0 0 6px; color:var(--danger); font-size:.95rem}
+.problem-card .fix{margin-top:8px; font-size:.83rem; color:var(--ok); background:var(--ok-bg); border-radius:8px; padding:8px}
+.pill{display:inline-block; background:var(--gold); color:#2b1d05; border-radius:999px; padding:2px 10px; font-size:.75rem; font-weight:700}
+
+/* ===== Quiz ===== */
+.qgroup-title{
+  display:flex; align-items:center; gap:8px; margin:26px 0 12px; color:var(--green-800);
+  font-weight:800; font-size:1.05rem;
+}
+.qgroup-title .badge{background:var(--green-700); color:#fff; border-radius:8px; padding:3px 10px; font-size:.78rem}
+.qcard{background:var(--card); border:1px solid var(--border); border-radius:14px; padding:16px; margin-bottom:14px; box-shadow:var(--shadow)}
+.qcard .qtext{font-weight:700; margin-bottom:10px; line-height:1.8}
+.qcard .opt-list{display:flex; flex-direction:column; gap:8px}
+.opt-btn{
+  text-align:right; background:var(--bg); border:1.5px solid var(--border); border-radius:10px;
+  padding:10px 14px; font-size:.9rem; transition:.15s;
+}
+.opt-btn:hover{border-color:var(--green-500)}
+.opt-btn.selected{border-color:var(--green-600); background:var(--green-100)}
+.opt-btn.correct{border-color:var(--ok); background:var(--ok-bg); font-weight:700}
+.opt-btn.wrong{border-color:var(--danger); background:var(--danger-bg); font-weight:700}
+.tf-row{display:flex; gap:10px}
+.tf-row .opt-btn{flex:1; text-align:center}
+.fill-input, .short-input{
+  width:100%; padding:10px 12px; border:1.5px solid var(--border); border-radius:10px; font-size:.92rem;
+  background:var(--bg); color:var(--ink); font-family:inherit;
+}
+.short-input{min-height:70px; resize:vertical}
+.qcard .actions{display:flex; gap:8px; margin-top:10px; flex-wrap:wrap}
+.feedback{margin-top:10px; padding:10px 12px; border-radius:10px; font-size:.87rem; line-height:1.7; display:none}
+.feedback.show{display:block}
+.feedback.ok{background:var(--ok-bg); color:var(--ok)}
+.feedback.bad{background:var(--danger-bg); color:var(--danger)}
+
+/* ===== Exam ===== */
+.exam-form{max-width:520px; margin:0 auto}
+.field{margin-bottom:14px}
+.field label{display:block; font-weight:700; margin-bottom:6px; font-size:.88rem; color:var(--green-800)}
+.field input, .field select{
+  width:100%; padding:11px 13px; border:1.5px solid var(--border); border-radius:10px; font-size:.92rem;
+  background:var(--card); color:var(--ink); font-family:inherit;
+}
+.exam-topbar{
+  display:flex; justify-content:space-between; align-items:center; background:var(--card); border:1px solid var(--border);
+  border-radius:12px; padding:10px 16px; margin-bottom:16px; position:sticky; top:calc(70px + env(safe-area-inset-top,0px)); z-index:10; box-shadow:var(--shadow);
+  flex-wrap:wrap; gap:8px;
+}
+.timer{font-weight:800; color:var(--green-800)}
+.score-summary{
+  text-align:center; background:var(--card); border:1px solid var(--border); border-radius:16px; padding:26px; box-shadow:var(--shadow);
+}
+.score-circle{
+  width:130px; height:130px; border-radius:50%; margin:10px auto; display:flex; align-items:center; justify-content:center;
+  flex-direction:column; border:8px solid var(--green-600); font-weight:800; color:var(--green-800);
+}
+.score-circle .big{font-size:1.8rem}
+.review-item{background:var(--card); border:1px solid var(--border); border-radius:12px; padding:12px 14px; margin-bottom:10px}
+.review-item.wrong{border-color:var(--danger)}
+.review-item.right{border-color:var(--ok)}
+
+/* ===== Teacher dashboard ===== */
+.teacher-lock{max-width:400px; margin:60px auto; text-align:center}
+table.results{width:100%; border-collapse:collapse; font-size:.82rem}
+table.results th, table.results td{border:1px solid var(--border); padding:7px 8px; text-align:center; white-space:nowrap}
+table.results th{background:var(--green-100); color:var(--green-800); position:sticky; top:0}
+.stats-row{display:flex; gap:12px; flex-wrap:wrap; margin-bottom:16px}
+.stat-box{background:var(--card); border:1px solid var(--border); border-radius:12px; padding:14px 18px; text-align:center; flex:1; min-width:120px; box-shadow:var(--shadow)}
+.stat-box .n{font-size:1.5rem; font-weight:800; color:var(--green-700)}
+.stat-box .lbl{font-size:.78rem; color:var(--ink-soft)}
+
+footer{text-align:center; color:var(--ink-soft); font-size:.8rem; padding:20px; opacity:.75}
+.hidden{display:none !important}
+.center-msg{text-align:center; color:var(--ink-soft); padding:30px}
+@media(max-width:640px){
+  .brand small{display:none}
+  nav.tabs{width:100%; justify-content:flex-start; overflow-x:auto; flex-wrap:nowrap; padding-bottom:4px}
+  nav.tabs button{flex:0 0 auto}
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="top-inner">
+    <div class="brand"><span class="leaf">🌱</span><div>إعداد التربة الزراعية<small>تكنولوجيا الزراعة والري - الصف الأول الثانوي الزراعي</small></div></div>
+    <nav class="tabs" id="mainNav"></nav>
+  </div>
+</header>
+<main id="app"></main>
+<footer>دليل الطالب التفاعلي · الوحدة الثانية: إعداد التربة الزراعية</footer>
+
+<script>
+/* ============================= DATA ============================= */
+const SVG = {
+  profile: `<svg viewBox="0 0 320 260" xmlns="http://www.w3.org/2000/svg" style="max-height:260px">
+    <rect x="30" y="20" width="150" height="60" fill="#6b4a2f" stroke="#3d2c1b" stroke-width="2"/>
+    <text x="105" y="55" text-anchor="middle" fill="#fff" font-size="15" font-weight="bold">أفق A</text>
+    <rect x="30" y="80" width="150" height="70" fill="#a3714a" stroke="#3d2c1b" stroke-width="2"/>
+    <text x="105" y="120" text-anchor="middle" fill="#fff" font-size="15" font-weight="bold">أفق B</text>
+    <rect x="30" y="150" width="150" height="80" fill="#c9a876" stroke="#3d2c1b" stroke-width="2"/>
+    <text x="105" y="195" text-anchor="middle" fill="#3d2c1b" font-size="15" font-weight="bold">أفق C</text>
+    <line x1="180" y1="20" x2="230" y2="45" stroke="#556b2f" stroke-width="1.5"/>
+    <text x="234" y="50" font-size="12" fill="#3d2c1b">الغسيل: تفقد المواد الذائبة</text>
+    <line x1="180" y1="115" x2="230" y2="115" stroke="#556b2f" stroke-width="1.5"/>
+    <text x="234" y="119" font-size="12" fill="#3d2c1b">الترسيب: تتجمع المواد المُزالة</text>
+    <line x1="180" y1="190" x2="230" y2="200" stroke="#556b2f" stroke-width="1.5"/>
+    <text x="234" y="204" font-size="12" fill="#3d2c1b">مادة الأصل (الصخر الأم)</text>
+    <text x="105" y="245" text-anchor="middle" font-size="12" fill="#556b2f">سطح الأرض ↓</text>
+  </svg>`,
+  texture: `<svg viewBox="0 0 300 260" xmlns="http://www.w3.org/2000/svg" style="max-height:260px">
+    <polygon points="150,20 30,230 270,230" fill="#f4ecd8" stroke="#8a6d3b" stroke-width="2"/>
+    <polygon points="150,20 100,110 200,110" fill="#c98b52"/>
+    <text x="150" y="70" text-anchor="middle" font-size="11" fill="#3d2c1b">طين</text>
+    <polygon points="100,110 200,110 230,170 70,170" fill="#d9b98a"/>
+    <text x="150" y="145" text-anchor="middle" font-size="11" fill="#3d2c1b">طفالي (متوسط)</text>
+    <polygon points="70,170 230,170 270,230 30,230" fill="#e8d4a8"/>
+    <text x="150" y="205" text-anchor="middle" font-size="11" fill="#3d2c1b">رملي</text>
+    <text x="150" y="12" text-anchor="middle" font-size="12" fill="#3d2c1b">طين 100%</text>
+    <text x="18" y="240" text-anchor="middle" font-size="12" fill="#3d2c1b">رمل</text>
+    <text x="282" y="240" text-anchor="middle" font-size="12" fill="#3d2c1b">سلت</text>
+  </svg>`,
+  structure: `<svg viewBox="0 0 420 130" xmlns="http://www.w3.org/2000/svg" style="max-height:150px">
+    <g><circle cx="35" cy="30" r="7" fill="#7a5230"/><circle cx="55" cy="25" r="6" fill="#7a5230"/><circle cx="50" cy="45" r="7" fill="#7a5230"/><circle cx="30" cy="50" r="5" fill="#7a5230"/><circle cx="65" cy="48" r="6" fill="#7a5230"/>
+    <text x="47" y="90" text-anchor="middle" font-size="11" fill="#3d2c1b">حبيبي (مفضل)</text></g>
+    <g transform="translate(110,0)"><rect x="15" y="15" width="22" height="22" fill="#7a5230" transform="rotate(8 26 26)"/><rect x="45" y="20" width="22" height="20" fill="#7a5230" transform="rotate(-5 56 30)"/><rect x="25" y="42" width="24" height="18" fill="#7a5230" transform="rotate(4 37 51)"/>
+    <text x="47" y="90" text-anchor="middle" font-size="11" fill="#3d2c1b">كتلي (مكعبي)</text></g>
+    <g transform="translate(220,0)"><rect x="10" y="15" width="60" height="6" fill="#7a5230"/><rect x="10" y="25" width="60" height="6" fill="#7a5230"/><rect x="10" y="35" width="60" height="6" fill="#7a5230"/><rect x="10" y="45" width="60" height="6" fill="#7a5230"/>
+    <text x="40" y="90" text-anchor="middle" font-size="11" fill="#3d2c1b">طبقي (صفائحي)</text></g>
+    <g transform="translate(320,0)"><rect x="20" y="10" width="10" height="45" fill="#7a5230"/><rect x="35" y="10" width="10" height="45" fill="#7a5230"/><rect x="50" y="10" width="10" height="45" fill="#7a5230"/>
+    <text x="40" y="90" text-anchor="middle" font-size="11" fill="#3d2c1b">منشوري (عمودي)</text></g>
+  </svg>`,
+  ph: `<svg viewBox="0 0 340 90" xmlns="http://www.w3.org/2000/svg" style="max-height:100px">
+    <defs><linearGradient id="phg" x1="0" x2="1"><stop offset="0%" stop-color="#c0392b"/><stop offset="50%" stop-color="#f5d76e"/><stop offset="100%" stop-color="#2471a3"/></linearGradient></defs>
+    <rect x="10" y="25" width="320" height="22" rx="11" fill="url(#phg)"/>
+    <text x="10" y="20" font-size="11" fill="#3d2c1b">1 (حامضي جدا)</text>
+    <text x="150" y="20" font-size="11" fill="#3d2c1b">7 (متعادل)</text>
+    <text x="280" y="20" font-size="11" fill="#3d2c1b">14 (قلوي جدا)</text>
+    <line x1="170" y1="15" x2="170" y2="55" stroke="#3d2c1b" stroke-width="2" stroke-dasharray="3,2"/>
+    <text x="90" y="70" font-size="11" fill="#3d2c1b">الأفضل لنمو النبات: 5.5 - 7.5</text>
+  </svg>`,
+  layout: `<svg viewBox="0 0 300 150" xmlns="http://www.w3.org/2000/svg" style="max-height:150px">
+    <rect x="10" y="10" width="280" height="130" fill="#e8d4a8" stroke="#8a6d3b"/>
+    ${Array.from({length:8}).map((_,i)=>`<line x1="${20+i*33}" y1="15" x2="${20+i*33}" y2="135" stroke="#7a5230" stroke-width="4"/>`).join('')}
+    <text x="150" y="145" text-anchor="middle" font-size="11" fill="#3d2c1b">خطوط الزراعة (الخط: ظهر + بطن + ريشتين)</text>
+  </svg>`
+};
+
+const LESSONS = [
+{
+  id:1, title:"التربة الزراعية", brief:"تعريف التربة، نشأتها، مواصفاتها، والقطاع الأرضي",
+  sections:[
+    {h:"تعريف التربة الزراعية", body:`<p>التربة الزراعية هي الطبقة السطحية المفككة من القشرة الأرضية، وتتكون من فُتات الصخور بعد تعرضها لعوامل التجوية المختلفة (الأمطار، درجات الحرارة، الرياح) على مدى آلاف السنين. تختلط حبيبات الصخور المتفتتة بالمواد العضوية المتحللة بفعل الكائنات الحية الدقيقة، وينتج عن هذا الخليط الطبقة السطحية التي تنتشر فيها جذور النباتات.</p>
+    <div class="note-box">💡 باختصار: تربة = فُتات صخري + مادة عضوية متحللة، تكوّنت عبر زمن طويل جدا.</div>`},
+    {h:"تصنيف التربة حسب المنشأ", body:`<ul>
+      <li><b>التربة المحلية:</b> تنشأ من تفتت نوع واحد فقط من الصخور في نفس موقعها.</li>
+      <li><b>التربة المنقولة (الرسوبية):</b> تنشأ من ترسيب حبيبات أكثر من نوع من الصخور، بعد أن تنقلها مياه الأنهار من أماكن بعيدة.</li>
+    </ul>
+    <p>أما الصخر نفسه فهو الوحدة الأساسية المكوّنة للقشرة الأرضية، وينقسم إلى صخور نارية (أولية) تمثل نحو 95% من القشرة الأرضية وهي أصل جميع الصخور الأخرى، وصخور رسوبية تكونت من ترسب فتات الصخور النارية في طبقات بفعل الرياح أو الماء.</p>`},
+    {h:"مواصفات التربة الصالحة للزراعة", body:`<p>لضمان إنتاج زراعي جيد كمًا ونوعًا، يجب أن تتوفر في التربة الصفات التالية:</p>
+    <ol>
+      <li>بناء جيد يسمح بنفاذ الماء والهواء وانتشار الجذور.</li>
+      <li>عمق مناسب (لا يقل عادة عن 30 سم)؛ فالتربة العميقة أنسب لأشجار الفاكهة، بينما تكفي الترب متوسطة العمق لمحاصيل الخضر والحقل.</li>
+      <li>صرف جيد، بحيث يكون مستوى الماء الأرضي عميقًا.</li>
+      <li>تهوية جيدة لتبادل الغازات بين طبقات التربة والجو.</li>
+      <li>احتواؤها على مادة عضوية كافية لزيادة الخصوبة والاحتفاظ بالرطوبة.</li>
+      <li>خلوها من الأملاح الضارة بالنبات مثل كلوريد الصوديوم.</li>
+      <li>درجة حموضة (pH) مناسبة لنمو المحصول المختار.</li>
+      <li>خلوها من الأمراض وبذور الحشائش.</li>
+    </ol>`},
+    {h:"القطاع الأرضي (قطاع التربة)", body:`<p>القطاع الأرضي هو مقطع رأسي يبدأ من سطح التربة ويتجه إلى الأسفل حتى مادة الأصل أو ظهور الماء الأرضي، ويقسَّم إلى ثلاثة آفاق (طبقات) رئيسية يُرمز لها من السطح إلى الباطن بالحروف A، B، C.</p>
+    <div class="diagram-box"><figure>${SVG.profile}<figcaption>شكل توضيحي: آفاق القطاع الأرضي الثلاثة</figcaption></figure></div>
+    <table class="table-nice"><tr><th>الأفق</th><th>الاسم</th><th>أهم صفاته</th></tr>
+    <tr><td>A</td><td>أفق الغسيل (السلب)</td><td>تنتقل منه المواد الذائبة والغروية إلى الأسفل، وأعلى الآفاق في المادة العضوية</td></tr>
+    <tr><td>B</td><td>أفق الترسيب (الإضافة)</td><td>تترسب فيه المواد المنقولة من الأفق A، ثقيل القوام ومتماسك</td></tr>
+    <tr><td>C</td><td>أفق مادة الأصل</td><td>المادة الأصلية التي نشأت منها الأرض، فوقها تترسب الطبقات المنقولة</td></tr>
+    </table>
+    <p>ولدراسة القطاع الأرضي أهمية كبيرة، إذ يساعد على معرفة الخواص الطبيعية والكيميائية للأرض والاستفادة منها في الأغراض الزراعية، كما يساعد في دراسة نشأة وتكوين الأراضي وتصنيفها ضمن مجاميعها العالمية.</p>`}
+  ],
+  quiz:{
+    tf:[
+      {q:"تنشأ التربة المحلية من ترسيب حبيبات أكثر من نوع من الصخور نقلتها المياه.", a:false, exp:"هذا وصف التربة المنقولة (الرسوبية)؛ أما المحلية فتنشأ من تفتت نوع واحد من الصخور في موضعها."},
+      {q:"تمثل الصخور النارية نحو 95% من مكونات القشرة الأرضية.", a:true, exp:"صحيح، وهي أساس جميع أنواع الصخور الأخرى."},
+      {q:"يرمز لأفق الترسيب في القطاع الأرضي بالحرف A.", a:false, exp:"الحرف A يرمز لأفق الغسيل، أما أفق الترسيب فيرمز له بالحرف B."}
+    ],
+    mcq:[
+      {q:"أي آفاق القطاع الأرضي تترسب فيه المواد المزالة من الأفق العلوي؟", options:["أفق A","أفق B","أفق C","لا يوجد ترسيب"], correct:1, exp:"أفق B (الترسيب والإضافة) يستقبل المواد التي فقدها الأفق A."},
+      {q:"من مواصفات التربة الصالحة للزراعة:", options:["ارتفاع الأملاح الضارة","سوء الصرف","احتواؤها على مادة عضوية مناسبة","ضحالة العمق دائمًا"], correct:2, exp:"وجود المادة العضوية يزيد الخصوبة ويحسّن خواص التربة."},
+      {q:"التربة التي تنشأ من تفتت نوع واحد من الصخور في موقعها تسمى:", options:["تربة منقولة","تربة رسوبية","تربة محلية","تربة صناعية"], correct:2, exp:"هذا تعريف التربة المحلية بالضبط."}
+    ],
+    fill:[
+      {q:"الطبقة السطحية المفككة من القشرة الأرضية الناتجة عن تفتت الصخور تسمى ______.", a:["التربة","التربة الزراعية"], exp:"التربة الزراعية."},
+      {q:"يرمز لأفق مادة الأصل في القطاع الأرضي بالحرف ______.", a:["C","c"], exp:"الحرف C يرمز لأفق مادة الأصل."}
+    ],
+    short:[
+      {q:"اذكر عاملين من عوامل التجوية التي تساهم في تكوين التربة.", keywords:["مطر","أمطار","حرارة","رياح"], sample:"الأمطار ودرجات الحرارة والرياح عبر آلاف السنين."},
+      {q:"ما الفرق الجوهري بين أفق الغسيل (A) وأفق الترسيب (B)؟", keywords:["غسيل","ترسيب","تنتقل","تترسب"], sample:"أفق A تُغسل منه المواد وتنتقل لأسفل، بينما أفق B تترسب فيه هذه المواد المنقولة."}
+    ]
+  }
+},
+{
+  id:2, title:"الخواص الطبيعية للتربة", brief:"القوام، البناء، الكثافة، والمسامية",
+  sections:[
+    {h:"قوام التربة", body:`<p>قوام التربة يعبّر عن مدى خشونة أو نعومة التربة، أي النسبة المئوية لحبيبات الرمل والسلت والطين المكوّنة لها. تتباين حبيبات التربة في الحجم؛ فالحبيبات الأكبر من 2 مم تسمى حصى، وما دون ذلك يُصنَّف كما يلي:</p>
+    <table class="table-nice"><tr><th>نوع الحبيبات</th><th>قطرها (مم)</th></tr>
+    <tr><td>رمل خشن</td><td>0.2 – 2</td></tr><tr><td>رمل ناعم</td><td>0.02 – 0.2</td></tr>
+    <tr><td>سلت</td><td>0.002 – 0.02</td></tr><tr><td>طين</td><td>أقل من 0.002</td></tr></table>
+    <div class="diagram-box"><figure>${SVG.texture}<figcaption>تبسيط لفكرة مثلث القوام: تحديد نوع التربة من نسب الرمل والسلت والطين</figcaption></figure></div>
+    <p>تُقسَّم أصناف القوام (12 صنفًا حسب التصنيف العالمي) إلى ثلاث مجموعات رئيسية:</p>
+    <ul>
+      <li><b>خفيفة القوام (رملية):</b> جيدة التهوية وسهلة الخدمة، لكنها ضعيفة الاحتفاظ بالماء والأسمدة.</li>
+      <li><b>متوسطة القوام (طميية):</b> توازن جيد بين التهوية والاحتفاظ بالماء والعناصر.</li>
+      <li><b>ثقيلة القوام (طينية):</b> قدرة عالية على الاحتفاظ بالماء والعناصر، لكنها رديئة التهوية وتتشقق عند الجفاف.</li>
+    </ul>
+    <div class="note-box">🌾 يمكن تحسين التربة الرملية بإضافة المادة العضوية، وتحسين التربة الثقيلة بالحرث العميق وإضافة المادة العضوية أيضًا.</div>`},
+    {h:"بناء التربة", body:`<p>بناء التربة هو نظام ترتيب حبيباتها الفردية والمركبة، ويتأثر بالقوام والصفات الكيميائية والظروف البيئية وعمليات الخدمة. وله أثر مباشر على حركة الماء والهواء وانتشار الجذور ونشاط الكائنات الدقيقة.</p>
+    <div class="diagram-box"><figure>${SVG.structure}<figcaption>الأنواع الأربعة لبناء التربة</figcaption></figure></div>
+    <ul>
+      <li><b>حبيبي (محبب):</b> النوع المفضل للزراعة؛ يسمح بحركة جيدة للماء والهواء وانتشار الجذور.</li>
+      <li><b>كتلي (مكعبي):</b> يوجد في الأراضي الثقيلة، خصوصًا في المناطق الرطبة.</li>
+      <li><b>طبقي (صفائحي):</b> غير مرغوب، لقلة المسامية وسوء الصرف.</li>
+      <li><b>منشوري (عمودي):</b> غير مرغوب أيضًا، محوره الرأسي أطول من الأفقي.</li>
+    </ul>`},
+    {h:"كثافة التربة", body:`<p>هناك نوعان من الكثافة:</p>
+    <ul>
+      <li><b>الكثافة الظاهرية:</b> كتلة وحدة الحجوم (1 سم³) من التربة بحالتها الطبيعية، بما فيها من فراغات بينية (جم/سم³).</li>
+      <li><b>الكثافة الحقيقية:</b> كتلة وحدة الحجوم من حبيبات التربة الصلبة الجافة تمامًا بدون المسافات البينية، ولا تتأثر بالقوام أو البناء ولا تختلف كثيرًا بين الترب.</li>
+    </ul>`},
+    {h:"الحيز المسامي (المسامية)", body:`<p>المسامية هي ذلك الحيز من حجم التربة غير المشغول بالحبيبات الصلبة، والمشغول دائمًا بالهواء والماء. تسود التربة الطينية مسافات شعرية صغيرة، بينما تسود التربة الرملية مسافات كبيرة. وبوجه عام، تبلغ المسامية في التربة الرملية نحو 30–50%، وفي التربة الطينية نحو 40–60%.</p>`}
+  ],
+  quiz:{
+    tf:[
+      {q:"البناء الحبيبي هو النوع المفضل في التربة الزراعية.", a:true, exp:"صحيح، لأنه يسهّل حركة الماء والهواء وانتشار الجذور."},
+      {q:"الكثافة الحقيقية تتأثر بشدة بقوام وبناء التربة.", a:false, exp:"الكثافة الحقيقية لا تتأثر كثيرًا بالقوام أو البناء؛ الكثافة الظاهرية هي التي تتأثر بهما."},
+      {q:"قطر حبيبات الطين أقل من 0.002 مم.", a:true, exp:"صحيح حسب تصنيف أقطار حبيبات التربة."}
+    ],
+    mcq:[
+      {q:"أي أنواع بناء التربة يُعد غير مرغوب فيه بسبب قلة المسام وسوء الصرف؟", options:["حبيبي","كتلي","طبقي (صفائحي)","لا يوجد نوع غير مرغوب"], correct:2, exp:"البناء الطبقي (الصفائحي) يقلل من التهوية والصرف."},
+      {q:"التربة التي تتراوح مساميتها بين 40% و60% غالبًا هي:", options:["رملية","طينية","حصوية","صخرية"], correct:1, exp:"التربة الطينية تتميز بمسامية أعلى (40-60%) لصغر حبيباتها."},
+      {q:"مجموعة القوام الأفضل توازنًا بين التهوية والاحتفاظ بالماء هي:", options:["الخفيفة (رملية)","المتوسطة (طميية)","الثقيلة (طينية)","الحصوية"], correct:1, exp:"التربة متوسطة القوام (الطميية) توازن جيدًا بين الصفتين."}
+    ],
+    fill:[
+      {q:"يعبّر ______ عن نسبة الرمل والسلت والطين المكوّنة للتربة.", a:["قوام التربة","القوام"], exp:"قوام التربة."},
+      {q:"الحيز غير المشغول بالحبيبات الصلبة في التربة يسمى ______.", a:["المسامية","الحيز المسامي"], exp:"المسامية أو الحيز المسامي."}
+    ],
+    short:[
+      {q:"كيف يمكن تحسين قوام التربة الرملية الخفيفة؟", keywords:["مادة عضوية","كومبوست","حرث"], sample:"بإضافة المادة العضوية مثل الكومبوست، وزراعة محاصيل بقولية وحرثها، واستخدام طرق الري الحديثة."},
+      {q:"عرّف الكثافة الظاهرية للتربة.", keywords:["كتلة","حجم","فراغات","طبيعية"], sample:"كتلة وحدة الحجوم (1سم³) من التربة بحالتها الطبيعية بما تحويه من فراغات بينية."}
+    ]
+  }
+},
+{
+  id:3, title:"الخواص الكيميائية للتربة", brief:"الغرويات، محلول التربة، التبادل الأيوني، وحموضة pH",
+  sections:[
+    {h:"غرويات التربة", body:`<p>تحتوي التربة على نوعين من الغرويات:</p>
+    <ul>
+      <li><b>الغرويات المعدنية (معادن الطين):</b> الجزء المعدني النشط في الأرض، سالب الشحنة، قادر على الاحتفاظ بالماء والعناصر، قابل للتشكيل، وينتفخ بامتصاص الماء.</li>
+      <li><b>الغرويات العضوية (الدبال):</b> تنشأ من تحلل بقايا النبات والحيوان، وتُعد مخزنًا للعناصر الغذائية، وتزيد السعة التبادلية للتربة، وتحسّن بناءها، وتقلل من قلويتها.</li>
+    </ul>
+    <div class="note-box">🧪 حبيبات التربة تحمل شحنة سالبة عمومًا، لذا تجذب العناصر الموجبة الشحنة (الكاتيونات) وتحتفظ بها من الغسيل.</div>`},
+    {h:"محلول التربة", body:`<p>محلول التربة هو الماء الموجود بين حبيبات التربة في المسام، وما به من عناصر ومواد ذائبة. يحصل النبات منه على معظم احتياجاته الغذائية، ويختلف محتواه من العناصر تبعًا للسعة التبادلية الكاتيونية وخصوبة التربة.</p>`},
+    {h:"التبادل الأيوني والكاتيوني", body:`<p>هو تبادل الأيونات (سالبة الشحنة) والكاتيونات (موجبة الشحنة) الموجودة على سطح حبيبات التربة الغروية مع تلك الذائبة في محلول التربة، وهي عملية تحدد قدرة التربة على إمداد النبات بالعناصر.</p>
+    <p>السعة التبادلية الكاتيونية هي مجموع الكاتيونات القابلة للتبادل الموجودة في 100 جرام تربة (أهمها الهيدروجين، الكالسيوم، المغنسيوم، البوتاسيوم، الصوديوم). تزداد هذه السعة في الترب ذات القوام الناعم (كالطينية) وبزيادة المادة العضوية، ولذلك تُعد الأراضي الطينية أكثر خصوبة من الأراضي الرملية.</p>`},
+    {h:"حموضة التربة (pH)", body:`<p>الـ pH هو اللوغاريتم السالب لتركيز أيون الهيدروجين النشط في محلول التربة، ويُقاس بجهاز pH Meter، وتتراوح قيمته بين 1 و14.</p>
+    <div class="diagram-box"><figure>${SVG.ph}<figcaption>مقياس pH: القيمة 7 متعادلة، وما دونها حامضي، وما فوقها قلوي</figcaption></figure></div>
+    <p>معظم الأراضي المصرية مائلة للقلوية (أكبر من 7) وأحيانًا متعادلة، وأفضل مدى لنمو النبات هو 5.5–7.5. يؤثر الـpH على تيسّر العناصر الصغرى (كالحديد والزنك) وعلى نشاط الكائنات الدقيقة المفيدة.</p>
+    <p>لتحسين حموضة التربة القلوية يمكن: إضافة المادة العضوية، غسل التربة من الأملاح القلوية، استخدام أسمدة كيماوية ذات تأثير حامضي (كسلفات النشادر)، أو إضافة أحماض معدنية مثل حامض الكبريتيك مع مياه الري بالتنقيط.</p>`}
+  ],
+  quiz:{
+    tf:[
+      {q:"يزداد نشاط الطين الكيميائي كلما كبر حجم حبيباته.", a:false, exp:"العكس صحيح: يزداد النشاط الكيميائي كلما صَغُر حجم الحبيبات."},
+      {q:"القيمة 7 على مقياس pH تمثل وسطًا متعادلًا.", a:true, exp:"صحيح، أقل من 7 حامضي وأكثر من 7 قلوي."},
+      {q:"الدبال (المادة العضوية) يقلل من السعة التبادلية الكاتيونية للتربة.", a:false, exp:"على العكس، يزيد الدبال من السعة التبادلية الكاتيونية."}
+    ],
+    mcq:[
+      {q:"أفضل مدى لحموضة التربة (pH) لنمو معظم النباتات هو:", options:["1 - 3","5.5 - 7.5","9 - 11","12 - 14"], correct:1, exp:"المدى 5.5–7.5 (مائل للحموضة إلى المتعادل) هو الأنسب غالبًا."},
+      {q:"الغرويات العضوية في التربة تُعرف باسم:", options:["الطين","الدبال","الرمل","السلت"], correct:1, exp:"الدبال هو الاسم العلمي للغرويات العضوية الناتجة عن تحلل البقايا."},
+      {q:"وسيلة لتحسين حموضة تربة قلوية:", options:["رفع الـpH أكثر","إضافة مادة عضوية وأسمدة حامضية","زيادة الملوحة","إيقاف الري"], correct:1, exp:"إضافة المادة العضوية والأسمدة ذات التأثير الحامضي تخفض القلوية."}
+    ],
+    fill:[
+      {q:"جهاز يُستخدم لقياس درجة حموضة التربة يسمى ______.", a:["pH Meter","جهاز قياس الحموضة"], exp:"pH Meter."},
+      {q:"الماء الموجود بين حبيبات التربة في المسام يسمى ______.", a:["محلول التربة"], exp:"محلول التربة."}
+    ],
+    short:[
+      {q:"لماذا تُعد الأراضي الطينية أكثر خصوبة عادة من الأراضي الرملية؟", keywords:["سعة تبادلية","مادة عضوية","قوام ناعم"], sample:"لأن سعتها التبادلية الكاتيونية أعلى بسبب قوامها الناعم واحتوائها على مادة عضوية أكثر."},
+      {q:"عرّف الادمصاص كما ورد في خصائص التربة الكيميائية.", keywords:["تماسك","سطح","حبيبات"], sample:"هو عملية تماسك العناصر على سطح حبيبات التربة."}
+    ]
+  }
+},
+{
+  id:4, title:"عيوب (مشاكل) التربة الزراعية", brief:"أبرز مشاكل الأراضي الزراعية وطرق علاجها",
+  problems:[
+    {t:"1. الملوحة العالية", d:"ارتفاع نسبة الأملاح الكلية الذائبة بالتربة، أكثر مشاكل التربة شيوعًا في مصر خصوصًا بالأراضي حديثة الاستصلاح.", fix:"الغسيل بغمر التربة، إقامة المصارف، زراعة أصناف متحملة للملوحة، إضافة الجبس الزراعي والمادة العضوية، اتباع الري الحديث."},
+    {t:"2. الصودية (القلوية) العالية", d:"ارتفاع نسبة كاتيون الصوديوم المدمص أو ارتفاع الـpH، مما يؤدي لقلوية التربة وسوء تهويتها.", fix:"نفس طرق علاج الملوحة: الغسيل، المصارف، الجبس الزراعي، الأسمدة ذات التأثير الحامضي."},
+    {t:"3. الخشونة الشديدة", d:"ارتفاع نسبة الرمل الخشن وشبه انعدام الطين، كما في الأراضي الصحراوية الرملية.", fix:"إضافة المادة العضوية، زراعة محاصيل بقولية وحرثها، استخدام الري الحديث."},
+    {t:"4. النعومة الشديدة (طينية ثقيلة جدًا)", d:"ارتفاع نسبة الطين الغروي وشبه انعدام الرمل؛ تنتفخ بالابتلال وتتشقق بالجفاف وسيئة التهوية.", fix:"زراعة أصناف تتحمل سوء الصرف، إقامة المصارف، الحرث العميق، الري بالتنقيط."},
+    {t:"5. رداءة التضاريس (عدم استواء الأرض)", d:"انحدار سطح التربة وعدم استوائها، ما يصعّب الري والعمليات الزراعية.", fix:"اتباع الري بالتنقيط، وتسوية الأرض قبل الزراعة."},
+    {t:"6. وجود كربونات الكالسيوم (الجير)", d:"نسبة عالية من الجير الناعم تقلل خصوبة التربة وتعيق تيسر العناصر الصغرى كالحديد والزنك.", fix:"إضافة المادة العضوية والجبس، أسمدة حامضية، عناصر صغرى مخلبية، حمض الكبريتيك مع الري."},
+    {t:"7. كثرة الأحجار والصخور", d:"وجود نسبة كبيرة من الأحجار يعيق إجراء العمليات الزراعية بكفاءة.", fix:"تنقية الأحجار الكبيرة ونقلها أو تكسيرها، وتمشيط الأحجار الصغيرة خارج نطاق الزراعة."},
+    {t:"8. الغدق (نشع المياه على السطح)", d:"احتواء التربة على كمية كبيرة من الماء تجعلها غارقة وتحتاج شبكة صرف جيدة.", fix:"إقامة مصارف زراعية، زراعة نباتات ذات جذور سطحية، إقامة مصاطب مرتفعة."}
+  ],
+  sections:[
+    {h:"نظرة عامة على مشاكل التربة", body:`<p>تعاني الأراضي الزراعية من مشاكل متعددة تتحكم في نوع المحصول المناسب للزراعة، لذا على المزارع اختيار التركيب المحصولي وطريقة الري والزراعة التي تلائم حالة التربة. فيما يلي أبرز هذه المشاكل وطرق التغلب عليها:</p>`}
+  ]
+},
+{
+  id:5, title:"عمليات الخدمة قبل الزراعة", brief:"الحرث، التسوية، والتخطيط",
+  sections:[
+    {h:"أولًا: عملية الحرث", body:`<p>الحرث هو تفكيك وإثارة سطح التربة لعمق يتراوح بين 15 و40 سم وقلبها كليًا أو جزئيًا.</p>
+    <p><b>فوائد الحرث:</b> تفكيك التربة لانتشار الجذور، تحسين الخواص الطبيعية والكيماوية والحيوية، تهوية التربة وتنشيط التبادل الغازي، تشميس الأرض وتنشيط الأحياء الدقيقة، خلط الأسمدة العضوية بالتربة، التخلص من الحشائش الضارة، والقضاء على الأطوار الساكنة للحشرات.</p>
+    <p><b>معايير الحرث الجيد:</b></p>
+    <ul>
+      <li>اقتلاع الحشائش والبقايا النباتية أو دفنها بالمحراث القلاب.</li>
+      <li>تفتيت التربة جيدًا وعدم وجود كُتل كبيرة (قلاقيل).</li>
+      <li>عدم ترك أماكن بدون حرث (آسات)، خاصة زوايا الحقل.</li>
+      <li>انتظام عمق الحرث، وهذا يتوقف على مهارة سائق الجرار.</li>
+    </ul>`},
+    {h:"ثانيًا: عملية التسوية", body:`<p>تحتاج الأرض إلى تسوية سطحها بعد الحرث والتخطيط، إذ تنتج عن هذه العمليات مرتفعات ومنخفضات تصعّب ضبط الري.</p>
+    <p><b>معايير التسوية الجيدة:</b> استواء سطح التربة للعين المجردة، وجود ميل منتظم من رأس الحقل إلى ذيله يسمح بإتمام الري بسهولة، واستقامة خطوط سير القصّابية.</p>`},
+    {h:"ثالثًا: عملية التخطيط", body:`<p><b>أ- تخطيط الأرض لمحاصيل الحقل والخضر:</b> إقامة الخطوط بالأبعاد المناسبة للمحاصيل التي تُزرع على خطوط أو مصاطب. يتكون الخط من ظهر الخط وبطن الخط والريشتين الجانبيتين.</p>
+    <div class="diagram-box"><figure>${SVG.layout}<figcaption>تخطيط الأرض بخطوط الزراعة</figcaption></figure></div>
+    <p><b>معايير التخطيط الجيد:</b> عرض مناسب لحجم المحصول مع استقامة وتوازي الخطوط، اتجاه الخطوط مع هبوب الرياح، عمودية الخطوط على الميل وعلى قنوات الحقل، واتجاه شرقي-غربي للمحاصيل الشتوية كالقطن لتدفئة الريشة القبلية.</p>
+    <table class="table-nice"><tr><th>المحصول</th><th>معدل التخطيط (خط/قصبتين)</th><th>المسافة بين الخطوط</th></tr>
+    <tr><td>الذرة الشامية</td><td>10</td><td>70 سم</td></tr>
+    <tr><td>القطن</td><td>12</td><td>60 سم</td></tr>
+    <tr><td>الفول البلدي/السمسم/البصل</td><td>14</td><td>50 سم</td></tr></table>
+    <p><b>ب- تخطيط الأرض لبساتين الفاكهة:</b> يتم بخطوتين: تعليم مكان الجور أو الخنادق بالجير والحبال حسب مسافات الزراعة، ثم حفر الجور بالبريمة أو الخنادق بالحفار، مع وضع الكومبوست فوق ناتج الحفر وخلطه جيدًا قبل الردم.</p>`}
+  ],
+  quiz:{
+    tf:[
+      {q:"يتراوح عمق الحرث عادة بين 15 و40 سم.", a:true, exp:"صحيح حسب المعايير المذكورة."},
+      {q:"من معايير التسوية الجيدة وجود مرتفعات ومنخفضات واضحة في الأرض.", a:false, exp:"التسوية الجيدة تعني استواء السطح ووجود ميل منتظم فقط، وليس مرتفعات ومنخفضات."},
+      {q:"معدل التخطيط لمحصول القطن هو 12 خطًا في القصبتين تقريبًا.", a:true, exp:"صحيح، بمسافة نحو 60 سم بين الخطوط."}
+    ],
+    mcq:[
+      {q:"الأماكن التي تُترك بدون حرث في زوايا الحقل تسمى:", options:["قلاقيل","آسات","خنادق","مصاطب"], correct:1, exp:"تسمى آسات، وهي من عيوب الحرث التي يجب تجنبها."},
+      {q:"الاتجاه الأنسب لخطوط زراعة القطن (محصول شتوي/بارد) هو:", options:["شمال-جنوب","شرق-غرب","عشوائي","دائري"], correct:1, exp:"لتدفئة الريشة القبلية بأشعة الشمس وتحسين الإنبات."},
+      {q:"عملية تفكيك وإثارة سطح التربة وقلبها كليًا أو جزئيًا تسمى:", options:["التسوية","التخطيط","الحرث","الشتل"], correct:2, exp:"هذا هو تعريف الحرث بالضبط."}
+    ],
+    fill:[
+      {q:"الكتل الترابية الكبيرة غير المفتتة الناتجة عن حرث غير جيد تسمى ______.", a:["قلاقيل"], exp:"قلاقيل."},
+      {q:"يتكون الخط الزراعي من ظهر الخط وبطن الخط و______.", a:["الريشتين الجانبيتين","الريشتين"], exp:"الريشتين الجانبيتين."}
+    ],
+    short:[
+      {q:"اذكر فائدتين من فوائد عملية الحرث.", keywords:["تهوية","حشائش","تفكيك","تشميس"], sample:"تفكيك التربة لتسهيل انتشار الجذور، وتحسين التهوية، والتخلص من الحشائش الضارة."},
+      {q:"ما الفرق بين الجورة والخندق في تجهيز الأرض لزراعة الفاكهة؟", keywords:["اسطوانية","طولي","بريمة","حفار"], sample:"الجورة حفرة اسطوانية تُقام بالبريمة، بينما الخندق حفر طولي متصل يُنفذ بالحفارات."}
+    ]
+  }
+},
+{
+  id:6, title:"طرق الزراعة", brief:"الزراعة العفير، الحراتي، والشتل",
+  sections:[
+    {h:"الزراعة العفير", body:`<p>هي وضع بذرة جافة في أرض جافة ثم الري بعد ذلك.</p>
+    <p><b>مميزاتها:</b> توفير التقاوى، انتظام المسافات بين النباتات، التحكم في عدد النباتات وفي معدل التقاوى، سهولة استخدام آلات الخدمة، وقلة التكاليف والأيدي العاملة في المساحات الكبيرة.</p>
+    <p><b>عيوبها:</b> قد تحتاج كمية تقاوى أكبر، احتمال عدم تماثل الحبوب في الحجم، وانخفاض نسبة الإنبات عند عدم تسوية الأرض.</p>
+    <p><b>تُستخدم عندما:</b> الأرض خفيفة أو رملية، أو مالحة، أو الميعاد متأخر، أو خالية من الحشائش، أو سطحها مستوٍ.</p>`},
+    {h:"الزراعة الحراتي (الرطبة/المبتلة)", body:`<p>هي زراعة بذرة مبتلة (منقوعة أو مكمورة) أو جافة في أرض رطبة سبق ريها وتحتوي على رطوبة مناسبة للإنبات.</p>
+    <p><b>مميزاتها:</b> مقاومة أفضل للرقاد بسبب عمق الزراعة، تناسب الأراضي غير المستوية والخالية من الأملاح، وتساعد على مقاومة الحشائش السابقة للزراعة.</p>
+    <p><b>عيوبها:</b> انخفاض نسبة الإنبات في بعض الحالات، زيادة كمية التقاوى، عدم انتظام ظهور البادرات، وصعوبة استخدام الآلات الزراعية.</p>
+    <p><b>تُستخدم عندما:</b> الأرض موبوءة بالحشائش، أو غير مستوية، أو الميعاد مبكر، أو التقاوى حساسة للري، أو الأرض ثقيلة وخالية من الأملاح.</p>
+    <div class="note-box">🌱 الأرض المستحرثة (أرض فريك) هي الأرض التي تحتوي على نسبة رطوبة مناسبة للحرث، ويمكن معرفتها بأخذ عينة من عمق 10 سم وفركها بأصابع اليد فلا تكون متعجنة.</div>`},
+    {h:"الزراعة بالشتل", body:`<p>تُستخدم غالبًا في أشجار الفاكهة ومعظم نباتات الخضر، وتتم بغرس شتلات سبق زراعتها في المشتل، إما يدويًا أو آليًا (كما في الأرز والخضر)، ويُراعى أن تتم في وجود الماء أو أن تكون التربة مروية قبل الشتل مباشرة.</p>
+    <ul>
+      <li>الشتلات الواردة بأكياس بلاستيكية: تُزال قاعدة الكيس دون الإضرار بالجذور، ثم توضع الصلية وسط الجورة ويُسحب الكيس للأعلى.</li>
+      <li>الشتلات الواردة "ملشا" (متساقطة الأوراق): تُغرس بعد تقليم الجذور وتهذيبها في حفرة بالفأس، ثم تُردم وتُدك جيدًا.</li>
+    </ul>`},
+    {h:"العوامل المحددة لطرق الزراعة", body:`<ol><li>نوع التربة.</li><li>نوع المحصول.</li><li>طريقة الري المتبعة (غمر - رش - تنقيط).</li></ol>`}
+  ],
+  quiz:{
+    tf:[
+      {q:"الزراعة العفير هي زراعة بذرة مبتلة في أرض رطبة.", a:false, exp:"هذا تعريف الزراعة الحراتي؛ العفير هي بذرة جافة في أرض جافة."},
+      {q:"تناسب الزراعة الحراتي الأراضي الموبوءة بالحشائش.", a:true, exp:"صحيح، فهي تساعد على مقاومة الحشائش النابتة قبل الزراعة."},
+      {q:"الأرض المستحرثة (الفريك) هي أرض جافة تمامًا لا رطوبة بها.", a:false, exp:"هي أرض بها نسبة رطوبة مناسبة للحرث، تُختبر بفركها بين الأصابع فلا تتعجن."}
+    ],
+    mcq:[
+      {q:"من مميزات الزراعة العفير:", options:["زيادة كمية التقاوى المطلوبة","انتظام المسافات بين النباتات","صعوبة استخدام الآلات","عدم التحكم في الكثافة"], correct:1, exp:"من أهم مميزاتها انتظام المسافات والتحكم في الكثافة النباتية."},
+      {q:"الطريقة الأنسب عند تأخر ميعاد الزراعة مع أرض جافة مستوية وخالية من الحشائش:", options:["الزراعة الحراتي","الزراعة العفير","الشتل فقط","لا شيء مما سبق"], correct:1, exp:"هذه هي الحالة النموذجية لاستخدام الزراعة العفير."},
+      {q:"غرس شتلات سبق زراعتها في المشتل يسمى:", options:["الزراعة العفير","الزراعة الحراتي","عملية الشتل","التسوية"], correct:2, exp:"هذا هو تعريف عملية الشتل بدقة."}
+    ],
+    fill:[
+      {q:"وضع بذرة جافة في أرض جافة ثم الري يسمى الزراعة ______.", a:["العفير"], exp:"العفير."},
+      {q:"من العوامل المحددة لطرق الزراعة: نوع التربة، نوع المحصول، و______.", a:["طريقة الري","الري"], exp:"طريقة الري المتبعة."}
+    ],
+    short:[
+      {q:"متى تُفضَّل الزراعة الحراتي على العفير؟ اذكر حالتين.", keywords:["حشائش","غير مستوية","مبكر"], sample:"عند وجود حشائش كثيرة، أو عدم استواء الأرض، أو تبكير ميعاد الزراعة، أو حساسية التقاوى للري."},
+      {q:"صف كيفية التعامل مع الشتلة الواردة في كيس بلاستيكي عند الشتل.", keywords:["إزالة","كيس","صلية","جذور"], sample:"تُزال قاعدة الكيس بحذر دون الإضرار بالجذور، ثم توضع الصلية في الجورة، ويُسحب الكيس للأعلى بعد الردم."}
+    ]
+  }
+},
+{
+  id:7, title:"الحشائش", brief:"تعريفها، تصنيفها، أضرارها، وطرق مقاومتها",
+  sections:[
+    {h:"تعريف الحشائش", body:`<p>الحشائش هي نباتات غير مرغوب فيها، أو نباتات نبتت في غير موضعها، أي أنها تنمو في مكان لا يُراد لها أن تنمو فيه.</p>`},
+    {h:"تصنيف الحشائش", body:`<table class="table-nice">
+    <tr><th>حسب دورة الحياة</th><th>حسب موسم النمو</th><th>حسب شكل الورقة</th></tr>
+    <tr><td>حولية: تكمل دورتها في عام واحد (سهلة المكافحة)</td><td>صيفية: مثل الملوخية والزربيح</td><td>عريضة الأوراق (ذات فلقتين): كالزربيح والخبيزة والعليق</td></tr>
+    <tr><td>ثنائية الحول: نمو خضري بالعام الأول وزهري بالثاني</td><td>شتوية: مثل الخبيزة والرجلة والجعضيض</td><td>رفيعة الأوراق (نجيليات): كالنجيل والحلفا والسعد</td></tr>
+    <tr><td>معمرة: تعيش أكثر من عامين مثل النجيل والعليق والحلفا</td><td>-</td><td>-</td></tr>
+    </table>`},
+    {h:"طرق تكاثر الحشائش", body:`<ul>
+      <li>بالبذرة: معظم الحشائش (السريس، الجعضيض، الرجلة...).</li>
+      <li>بالأجزاء الخضرية: مثل النجيل والحلفا.</li>
+      <li>بالبذرة والأجزاء الخضرية معًا: مثل الرجلة.</li>
+    </ul>`},
+    {h:"أضرار الحشائش", body:`<ol>
+      <li>خفض المحصول كمًا ونوعًا.</li>
+      <li>خفض قيمة الأرض وصعوبة استغلالها.</li>
+      <li>تكون مأوى (عائلًا) للحشرات والأمراض.</li>
+      <li>تعوق مجرى المياه في الترع والمصارف.</li>
+      <li>قد تكون سامة للإنسان والحيوان وتؤثر على جودة منتجات الألبان.</li>
+    </ol>`},
+    {h:"طرق مقاومة الحشائش", body:`<p><b>أولًا - ميكانيكيًا:</b> الحرث مع التمشيط، العزيق مع تنقية أعضاء التكاثر الخضري وحرقها بعيدًا، التقليع باليد، الحش أو الرعي أو الحرق (خاصة للمعمرة)، تغطية التربة بالقش أو البلاستيك، والخدمة الخضراء بزراعة محاصيل تغطية كالبرسيم.</p>
+    <p><b>ثانيًا - كيماويًا (مبيدات الحشائش):</b></p>
+    <ul>
+      <li><b>مبيدات اختيارية:</b> تقتل بعض الحشائش دون الإضرار بالمحصول.</li>
+      <li><b>مبيدات غير اختيارية:</b> تقتل جميع النباتات التي تتعرض لها.</li>
+    </ul>
+    <p>وتُقسَّم أيضًا حسب وقت الاستخدام إلى: مبيدات تُخلط بالتربة أثناء تجهيز الأرض، ومبيدات تُرش على التربة قبل رية الزراعة، ومبيدات تُرش بعد إنبات المحصول.</p>`}
+  ],
+  quiz:{
+    tf:[
+      {q:"الحشائش الحولية أصعب في المكافحة من المعمرة.", a:false, exp:"العكس صحيح: الحشائش الحولية سهلة المكافحة، بينما المعمرة أصعب."},
+      {q:"تتكاثر حشيشة الرجلة بالبذرة والأجزاء الخضرية معًا.", a:true, exp:"صحيح، الرجلة من الأمثلة النادرة التي تتكاثر بالطريقتين."},
+      {q:"المبيدات غير الاختيارية تقتل الحشائش فقط دون المحصول.", a:false, exp:"المبيدات غير الاختيارية تقتل كل النباتات التي تتعرض لها، محصولًا كانت أو حشيشة."}
+    ],
+    mcq:[
+      {q:"الحشائش رفيعة الأوراق تسمى:", options:["عريضة الأوراق","نجيليات","فلقتين","معمرة فقط"], correct:1, exp:"تُعرف الحشائش رفيعة الأوراق بالنجيليات مثل النجيل والحلفا."},
+      {q:"من أضرار الحشائش:", options:["زيادة قيمة الأرض","كونها عائلًا للحشرات والأمراض","تحسين جودة منتجات الألبان","لا ضرر لها"], correct:1, exp:"الحشائش قد تأوي حشرات وأمراضًا تنتقل للمحصول."},
+      {q:"طريقة مقاومة ميكانيكية للحشائش:", options:["الرش بالمبيدات الاختيارية","العزيق والتقليع باليد","إضافة سلفات النشادر","رفع الملوحة"], correct:1, exp:"العزيق والتقليع باليد من الطرق الميكانيكية المباشرة."}
+    ],
+    fill:[
+      {q:"النبات غير المرغوب فيه أو الذي ينمو في غير موضعه يسمى ______.", a:["حشيشة","حشائش"], exp:"حشيشة (حشائش)."},
+      {q:"المبيدات التي تقتل بعض الحشائش دون الإضرار بالمحصول تسمى مبيدات ______.", a:["اختيارية"], exp:"اختيارية."}
+    ],
+    short:[
+      {q:"اذكر طريقتين ميكانيكيتين لمقاومة الحشائش.", keywords:["حرث","عزيق","تقليع","تغطية"], sample:"الحرث مع التمشيط، والعزيق مع تنقية أعضاء التكاثر الخضري، أو التقليع باليد، أو التغطية بالقش."},
+      {q:"ما الفرق بين المبيدات الاختيارية وغير الاختيارية؟", keywords:["اختيارية","تقتل بعض","تقتل جميع"], sample:"الاختيارية تقتل بعض الحشائش دون الإضرار بالمحصول، بينما غير الاختيارية تقتل كل النباتات التي تتعرض لها."}
+    ]
+  }
+}
+];
+// ensure lesson4 (problems only) has an empty quiz bank filled from problem list to still offer practice
+LESSONS[3].quiz = {
+  tf:[
+    {q:"الملوحة العالية تُعد من أكثر مشاكل التربة شيوعًا في مصر، خصوصًا بالأراضي حديثة الاستصلاح.", a:true, exp:"صحيح كما ورد في نص الدرس."},
+    {q:"تُعالج مشكلة الصودية العالية بزيادة كمية الأسمدة القلوية.", a:false, exp:"على العكس، تُعالج بالغسيل، الجبس الزراعي، والأسمدة ذات التأثير الحامضي."},
+    {q:"من طرق علاج الغدق إقامة مصارف زراعية وزراعة نباتات ذات جذور سطحية.", a:true, exp:"صحيح، وهذا يخفف من أثر زيادة الماء على الجذور."}
+  ],
+  mcq:[
+    {q:"أرض ذات نسبة عالية من الأملاح الذائبة تعاني من مشكلة:", options:["الخشونة الشديدة","الملوحة العالية","كثرة الأحجار","رداءة التضاريس"], correct:1, exp:"هذا هو تعريف مشكلة الملوحة العالية بالضبط."},
+    {q:"لعلاج مشكلة وجود الجير (كربونات الكالسيوم) يمكن استخدام:", options:["رفع نسبة الجير أكثر","عناصر صغرى مخلبية ومادة عضوية","إيقاف التسميد نهائيًا","زيادة الملوحة"], correct:1, exp:"إضافة العناصر الصغرى بصورة مخلبية والمادة العضوية يخفف أثر الجير."},
+    {q:"مشكلة النعومة الشديدة جدًا تحدث بسبب:", options:["ارتفاع نسبة الرمل الخشن","ارتفاع نسبة الطين الغروي وشبه انعدام الرمل","كثرة الأحجار","انخفاض منسوب الماء الأرضي فقط"], correct:1, exp:"ارتفاع الطين الغروي مع غياب الرمل يجعل التربة ثقيلة جدًا وسيئة الصرف."}
+  ],
+  fill:[
+    {q:"الأراضي ذات نسبة الصوديوم المدمص المرتفعة تسمى الأراضي ______.", a:["الصودية","القلوية"], exp:"الأراضي الصودية (أو القلوية)."},
+    {q:"إضافة ______ الزراعي قبل الحرث يرفع كفاءة عملية غسيل الأملاح.", a:["الجبس"], exp:"الجبس الزراعي."}
+  ],
+  short:[
+    {q:"اذكر طريقتين لعلاج مشكلة الملوحة العالية بالتربة.", keywords:["غسيل","مصارف","جبس","مادة عضوية"], sample:"الغسيل بغمر التربة بالماء، وإقامة المصارف، وإضافة الجبس الزراعي والمادة العضوية."},
+    {q:"ما أضرار كثرة الأحجار والصخور في الأرض الزراعية، وكيف تُعالج؟", keywords:["عمليات زراعية","تنقية","تكسير"], sample:"تعيق العمليات الزراعية، وتُعالج بتنقية الأحجار الكبيرة ونقلها أو تكسيرها، وتمشيط الصغيرة خارج نطاق الزراعة."}
+  ]
+};
+
+/* ============================= STATE ============================= */
+let route = "home";
+let currentLesson = 1;
+let lessonTab = "explain";
+let progress = JSON.parse(localStorage.getItem("soil_progress")||"{}");
+let dbNS=null, downloadsNS=null;
+
+function saveProgress(){ localStorage.setItem("soil_progress", JSON.stringify(progress)); }
+function markPracticed(id){ progress[id]=true; saveProgress(); renderNav(); }
+
+/* ============================= NAV ============================= */
+function renderNav(){
+  const nav = document.getElementById("mainNav");
+  let html = `<button data-r="home" class="${route==='home'?'active':''}">🏠 الرئيسية</button>`;
+  html += `<button data-r="exam" class="${route==='exam'?'active':''}">📝 الاختبار النهائي</button>`;
+  html += `<button data-r="teacher" class="${route==='teacher'?'active':''}">👩‍🏫 لوحة المعلم</button>`;
+  nav.innerHTML = html;
+  nav.querySelectorAll("button").forEach(b=>b.onclick=()=>{ route=b.dataset.r; render(); });
+}
+
+/* ============================= RENDER ROOT ============================= */
+function render(){
+  renderNav();
+  const app = document.getElementById("app");
+  if(route==="home") app.innerHTML = renderHome();
+  else if(route==="lesson") app.innerHTML = renderLesson(currentLesson);
+  else if(route==="exam") app.innerHTML = renderExamRoot();
+  else if(route==="teacher") app.innerHTML = renderTeacherRoot();
+  window.scrollTo({top:0,behavior:"smooth"});
+  attachHandlers();
+}
+
+function renderHome(){
+  const done = LESSONS.filter(l=>progress[l.id]).length;
+  const pct = Math.round(done/LESSONS.length*100);
+  let cards = LESSONS.map(l=>`
+    <div class="card lesson-card" data-lesson="${l.id}">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div class="lesson-num">${l.id}</div>
+        <div><h3>${l.title}</h3></div>
+      </div>
+      <p>${l.brief}</p>
+      <div class="progress-bar"><span style="width:${progress[l.id]?100:0}%"></span></div>
+      <div style="font-size:.78rem;color:var(--ink-soft)">${progress[l.id]?'✅ تم التدرب على هذا الدرس':'لم يُحل بعد'}</div>
+    </div>`).join("");
+  return `
+  <div class="hero">
+    <h1>🌾 إعداد التربة الزراعية</h1>
+    <p>دليل تفاعلي لتعلم خصائص التربة، مشاكلها، وطرق إعدادها وزراعتها ومقاومة الحشائش.<br>
+    تقدّمك الحالي: <b>${done} من ${LESSONS.length}</b> دروس (${pct}%)</p>
+    <div class="cta-row">
+      <button class="btn gold" onclick="location.hash='#exam'; route='exam'; render();">ابدأ الاختبار النهائي</button>
+    </div>
+  </div>
+  <div class="grid-home">${cards}</div>`;
+}
+
+function renderLesson(id){
+  const l = LESSONS.find(x=>x.id===id);
+  let idx = LESSONS.indexOf(l);
+  const prevBtn = idx>0 ? `<button class="btn ghost small" onclick="gotoLesson(${LESSONS[idx-1].id})">◀ السابق</button>` : "";
+  const nextBtn = idx<LESSONS.length-1 ? `<button class="btn small" onclick="gotoLesson(${LESSONS[idx+1].id})">التالي ▶</button>` : "";
+  let body = "";
+  if(lessonTab==="explain"){
+    if(l.problems){
+      body += `<div class="section-block"><h3>${l.sections[0].h}</h3>${l.sections[0].body}</div>`;
+      body += `<div class="problem-grid">` + l.problems.map(p=>`
+        <div class="problem-card"><h4>${p.t}</h4><p style="font-size:.85rem;line-height:1.7">${p.d}</p><div class="fix"><b>العلاج:</b> ${p.fix}</div></div>`).join("") + `</div>`;
+    } else {
+      body = l.sections.map(s=>`<div class="section-block"><h3>${s.h}</h3>${s.body}</div>`).join("");
+    }
+  } else {
+    body = renderQuizBlock(l, "practice");
+  }
+  return `
+  <div class="lesson-header">
+    <h2>الدرس ${l.id}: ${l.title}</h2>
+    <div style="display:flex;gap:8px">${prevBtn}${nextBtn}</div>
+  </div>
+  <div class="subtabs">
+    <button data-tab="explain" class="${lessonTab==='explain'?'active':''}">📖 الشرح التفاعلي</button>
+    <button data-tab="practice" class="${lessonTab==='practice'?'active':''}">✏️ المراجعة والتدريب</button>
+  </div>
+  <div style="margin-top:18px">${body}</div>`;
+}
+
+function gotoLesson(id){ currentLesson=id; lessonTab="explain"; route="lesson"; render(); }
+
+/* ============================= QUIZ RENDERING (practice) ============================= */
+function renderQuizBlock(l, mode){
+  let out = "";
+  const groups = [
+    {key:"tf", label:"أولًا: صواب أو خطأ", data:l.quiz.tf},
+    {key:"mcq", label:"ثانيًا: اختيار من متعدد", data:l.quiz.mcq},
+    {key:"fill", label:"ثالثًا: أكمل الفراغ", data:l.quiz.fill},
+    {key:"short", label:"رابعًا: أسئلة إجابات قصيرة", data:l.quiz.short}
+  ];
+  groups.forEach(g=>{
+    out += `<div class="qgroup-title">${g.label} <span class="badge">${g.data.length} سؤال</span></div>`;
+    g.data.forEach((q,i)=>{
+      const uid = `${l.id}_${g.key}_${i}`;
+      if(g.key==="tf"){
+        out += `<div class="qcard" id="q_${uid}">
+          <div class="qtext">${i+1}. ${q.q}</div>
+          <div class="tf-row">
+            <button class="opt-btn" onclick="answerTF('${uid}', true, ${q.a})">✅ صواب</button>
+            <button class="opt-btn" onclick="answerTF('${uid}', false, ${q.a})">❌ خطأ</button>
+          </div>
+          <div class="feedback" id="fb_${uid}"></div>
+        </div>`;
+      } else if(g.key==="mcq"){
+        out += `<div class="qcard" id="q_${uid}">
+          <div class="qtext">${i+1}. ${q.q}</div>
+          <div class="opt-list">${q.options.map((o,oi)=>`<button class="opt-btn" onclick="answerMCQ('${uid}', ${oi}, ${q.correct})">${o}</button>`).join("")}</div>
+          <div class="feedback" id="fb_${uid}"></div>
+        </div>`;
+      } else if(g.key==="fill"){
+        out += `<div class="qcard" id="q_${uid}">
+          <div class="qtext">${i+1}. ${q.q}</div>
+          <input class="fill-input" id="in_${uid}" placeholder="اكتب إجابتك هنا...">
+          <div class="actions"><button class="btn small" onclick="answerFill('${uid}', ${JSON.stringify(q.a).replace(/"/g,'&quot;')})">تحقق من الإجابة</button></div>
+          <div class="feedback" id="fb_${uid}"></div>
+        </div>`;
+      } else {
+        out += `<div class="qcard" id="q_${uid}">
+          <div class="qtext">${i+1}. ${q.q}</div>
+          <textarea class="short-input" id="in_${uid}" placeholder="اكتب إجابتك بأسلوبك..."></textarea>
+          <div class="actions"><button class="btn small" onclick="showModelAnswer('${uid}', ${JSON.stringify(q.sample).replace(/"/g,'&quot;')})">إظهار الإجابة النموذجية</button></div>
+          <div class="feedback" id="fb_${uid}"></div>
+        </div>`;
+      }
+    });
+  });
+  out += `<div style="text-align:center;margin-top:20px"><button class="btn gold" onclick="markPracticed(${l.id}); render();">✔ إنهاء التدريب على هذا الدرس</button></div>`;
+  return out;
+}
+function answerTF(uid, chosen, correctVal){
+  const card = document.getElementById("q_"+uid);
+  const btns = card.querySelectorAll(".opt-btn");
+  btns.forEach(b=>b.disabled=true);
+  const isRight = chosen===correctVal;
+  btns[correctVal?0:1].classList.add("correct");
+  if(!isRight) btns[chosen?0:1].classList.add("wrong");
+  const l = findLessonByUid(uid); const q = getQ(uid,"tf",l);
+  showFB(uid, isRight, q.exp);
+}
+function answerMCQ(uid, chosen, correctIdx){
+  const card = document.getElementById("q_"+uid);
+  const btns = card.querySelectorAll(".opt-btn");
+  btns.forEach(b=>b.disabled=true);
+  btns[correctIdx].classList.add("correct");
+  if(chosen!==correctIdx) btns[chosen].classList.add("wrong");
+  const l = findLessonByUid(uid); const q = getQ(uid,"mcq",l);
+  showFB(uid, chosen===correctIdx, q.exp);
+}
+function answerFill(uid, accepted){
+  const val = document.getElementById("in_"+uid).value.trim();
+  const ok = accepted.some(a=> val.replace(/\s+/g,'')===String(a).replace(/\s+/g,''));
+  const l = findLessonByUid(uid); const q = getQ(uid,"fill",l);
+  showFB(uid, ok, `${ok?'':'الإجابة الصحيحة: '+accepted[0]+'. '}${q.exp}`);
+}
+function showModelAnswer(uid, sample){
+  const l = findLessonByUid(uid);
+  showFB(uid, true, "الإجابة النموذجية: "+sample);
+}
+function showFB(uid, ok, text){
+  const fb = document.getElementById("fb_"+uid);
+  fb.className = "feedback show " + (ok?"ok":"bad");
+  fb.innerHTML = (ok?"✔ ":"✖ ") + text;
+}
+function findLessonByUid(uid){ const lid = parseInt(uid.split("_")[0]); return LESSONS.find(l=>l.id===lid); }
+function getQ(uid, type, l){ const parts=uid.split("_"); const idx=parseInt(parts[2]); return l.quiz[type][idx]; }
+
+/* ============================= FINAL EXAM ============================= */
+let examState = { phase:"register", student:null, questions:[], answers:[], startTime:null };
+
+function buildQuestionPool(){
+  let pool=[];
+  LESSONS.forEach(l=>{
+    l.quiz.tf.forEach((q,i)=>pool.push({type:"tf", lesson:l.id, idx:i, q}));
+    l.quiz.mcq.forEach((q,i)=>pool.push({type:"mcq", lesson:l.id, idx:i, q}));
+    l.quiz.fill.forEach((q,i)=>pool.push({type:"fill", lesson:l.id, idx:i, q}));
+    l.quiz.short.forEach((q,i)=>pool.push({type:"short", lesson:l.id, idx:i, q}));
+  });
+  return pool;
+}
+function shuffle(arr){ arr = arr.slice(); for(let i=arr.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]]; } return arr; }
+
+function renderExamRoot(){
+  if(examState.phase==="register") return renderExamRegister();
+  if(examState.phase==="running") return renderExamRunning();
+  if(examState.phase==="result") return renderExamResult();
+}
+function renderExamRegister(){
+  return `
+  <div class="card exam-form">
+    <h2 style="text-align:center;color:var(--green-800)">📝 الاختبار النهائي</h2>
+    <p style="text-align:center;color:var(--ink-soft);font-size:.88rem">سيتم اختيار 20 سؤالًا عشوائيًا من بنك أسئلة الوحدة. يُرجى إدخال بياناتك قبل البدء.</p>
+    <div class="field"><label>الاسم رباعي</label><input id="regName" placeholder="مثال: أحمد محمد علي حسن"></div>
+    <div class="field"><label>الفصل</label><input id="regClass" placeholder="مثال: 1/3"></div>
+    <div class="field"><label>الكود</label><input id="regCode" placeholder="الكود الخاص بك"></div>
+    <div style="text-align:center"><button class="btn gold" onclick="startExam()">ابدأ الاختبار</button></div>
+  </div>`;
+}
+function startExam(){
+  const name = document.getElementById("regName").value.trim();
+  const cls = document.getElementById("regClass").value.trim();
+  const code = document.getElementById("regCode").value.trim();
+  if(!name||!cls||!code){ alert("يرجى إدخال جميع البيانات (الاسم، الفصل، الكود) قبل بدء الاختبار."); return; }
+  const pool = shuffle(buildQuestionPool());
+  examState = {
+    phase:"running", student:{name,cls,code}, questions: pool.slice(0,20),
+    answers:new Array(20).fill(null), startTime:new Date()
+  };
+  render();
+}
+function renderExamRunning(){
+  let qs = examState.questions.map((item,i)=>{
+    const uid = "ex_"+i;
+    let inner="";
+    if(item.type==="tf"){
+      inner = `<div class="tf-row">
+        <button class="opt-btn ${examState.answers[i]===true?'selected':''}" onclick="setExamAnswer(${i}, true)">✅ صواب</button>
+        <button class="opt-btn ${examState.answers[i]===false?'selected':''}" onclick="setExamAnswer(${i}, false)">❌ خطأ</button></div>`;
+    } else if(item.type==="mcq"){
+      inner = `<div class="opt-list">${item.q.options.map((o,oi)=>`<button class="opt-btn ${examState.answers[i]===oi?'selected':''}" onclick="setExamAnswer(${i}, ${oi})">${o}</button>`).join("")}</div>`;
+    } else if(item.type==="fill"){
+      inner = `<input class="fill-input" oninput="setExamAnswer(${i}, this.value)" value="${examState.answers[i]||''}" placeholder="اكتب إجابتك">`;
+    } else {
+      inner = `<textarea class="short-input" oninput="setExamAnswer(${i}, this.value)" placeholder="اكتب إجابتك بأسلوبك">${examState.answers[i]||''}</textarea>`;
+    }
+    return `<div class="qcard"><div class="qtext">س${i+1} (الدرس ${item.lesson}) — ${item.q.q}</div>${inner}</div>`;
+  }).join("");
+  return `
+  <div class="exam-topbar"><div>👤 ${examState.student.name} — ${examState.student.cls}</div><div class="timer" id="examTimer">⏱ 00:00</div></div>
+  ${qs}
+  <div style="text-align:center;margin-top:16px"><button class="btn gold" onclick="submitExam()">إنهاء الاختبار وعرض النتيجة</button></div>`;
+}
+function setExamAnswer(i, val){ examState.answers[i]=val; if(examState.questions[i].type!=="fill" && examState.questions[i].type!=="short"){ render(); } }
+
+let examTimerInterval;
+function tickTimer(){
+  if(examState.phase!=="running") return;
+  const secs = Math.floor((new Date()-examState.startTime)/1000);
+  const m = String(Math.floor(secs/60)).padStart(2,"0"); const s=String(secs%60).padStart(2,"0");
+  const el = document.getElementById("examTimer");
+  if(el) el.textContent = `⏱ ${m}:${s}`;
+}
+
+function gradeShort(userText, keywords){
+  if(!userText) return false;
+  const t = userText.toLowerCase();
+  let hits = keywords.filter(k=>t.includes(k.toLowerCase())).length;
+  return hits >= Math.max(1, Math.ceil(keywords.length/2));
+}
+function submitExam(){
+  let correctCount=0; let wrongNums=[];
+  const details = examState.questions.map((item,i)=>{
+    let userAns = examState.answers[i]; let isRight=false; let correctText="";
+    if(item.type==="tf"){ isRight = userAns===item.q.a; correctText = item.q.a?"صواب":"خطأ"; }
+    else if(item.type==="mcq"){ isRight = userAns===item.q.correct; correctText = item.q.options[item.q.correct]; }
+    else if(item.type==="fill"){ isRight = userAns && item.q.a.some(a=>String(userAns).trim().replace(/\s+/g,'')===String(a).replace(/\s+/g,'')); correctText = item.q.a[0]; }
+    else { isRight = gradeShort(userAns||"", item.q.keywords); correctText = item.q.sample; }
+    if(isRight) correctCount++; else wrongNums.push(i+1);
+    return {n:i+1, q:item.q.q, type:item.type, userAns, isRight, correctText};
+  });
+  const endTime = new Date();
+  const total = examState.questions.length;
+  const score = Math.round(correctCount/total*100);
+  examState.phase="result";
+  examState.result = { correctCount, wrongCount: total-correctCount, wrongNums, total, score, endTime, details };
+  saveExamResult(examState);
+  render();
+}
+function renderExamResult(){
+  const r = examState.result;
+  let review = r.details.map(d=>`
+    <div class="review-item ${d.isRight?'right':'wrong'}">
+      <b>س${d.n} (${d.isRight?'✔ صحيحة':'✖ خاطئة'})</b> — ${d.q}<br>
+      ${!d.isRight? `<span style="color:var(--ink-soft);font-size:.85rem">إجابتك: ${d.userAns!==null&&d.userAns!==undefined&&d.userAns!==''?d.userAns:'(بدون إجابة)'} — الإجابة الصحيحة: ${d.correctText}</span>`:''}
+    </div>`).join("");
+  return `
+  <div class="score-summary">
+    <h2 style="color:var(--green-800)">نتيجة ${examState.student.name}</h2>
+    <div class="score-circle"><span class="big">${r.score}%</span><span style="font-size:.75rem">${r.correctCount} / ${r.total}</span></div>
+    <p style="color:var(--ink-soft)">الفصل: ${examState.student.cls} — الكود: ${examState.student.code}</p>
+    <p style="color:var(--ink-soft);font-size:.85rem">تم حفظ نتيجتك بنجاح ✅</p>
+  </div>
+  <h3 style="color:var(--green-700);margin-top:24px">مراجعة الإجابات</h3>
+  ${review}
+  <div style="text-align:center;margin-top:20px"><button class="btn ghost" onclick="resetExam()">إجراء اختبار جديد</button></div>`;
+}
+function resetExam(){ examState = { phase:"register", student:null, questions:[], answers:[], startTime:null }; render(); }
+
+/* ============================= SAVE RESULT (db capability + local fallback) ============================= */
+async function saveExamResult(state){
+  const r = state.result;
+  const doc = {
+    name: state.student.name, className: state.student.cls, code: state.student.code,
+    score: r.score, correctCount: r.correctCount, wrongCount: r.wrongCount,
+    wrongNums: r.wrongNums.join("، "), startTime: state.startTime.toISOString(),
+    endTime: r.endTime.toISOString(), total: r.total
+  };
+  // local fallback always
+  let local = JSON.parse(localStorage.getItem("soil_results")||"[]");
+  local.push(doc); localStorage.setItem("soil_results", JSON.stringify(local));
+  try{
+    if(!dbNS) dbNS = await claude.use("db");
+    if(dbNS){ await dbNS.collection("results").add(doc); }
+  }catch(e){ console.warn("db save failed, kept locally", e); }
+}
+
+/* ============================= TEACHER DASHBOARD ============================= */
+let teacherUnlocked = false;
+function renderTeacherRoot(){
+  if(!teacherUnlocked){
+    return `<div class="card teacher-lock">
+      <h2 style="color:var(--green-800)">👩‍🏫 دخول المعلم</h2>
+      <p style="color:var(--ink-soft);font-size:.88rem">أدخل كلمة مرور المعلم لعرض نتائج الطلاب.</p>
+      <input type="password" id="teacherPass" class="fill-input" placeholder="كلمة المرور" style="margin-bottom:10px">
+      <button class="btn gold" onclick="tryTeacherLogin()">دخول</button>
+      <p style="color:var(--ink-soft);font-size:.75rem;margin-top:10px">كلمة المرور الافتراضية: 1234</p>
+    </div>`;
+  }
+  return `<div id="teacherPanel" class="center-msg">جارِ تحميل النتائج...</div>`;
+}
+function tryTeacherLogin(){
+  const p = document.getElementById("teacherPass").value;
+  if(p==="1234"){ teacherUnlocked=true; render(); loadTeacherData(); }
+  else alert("كلمة المرور غير صحيحة");
+}
+async function loadTeacherData(){
+  let results = JSON.parse(localStorage.getItem("soil_results")||"[]");
+  try{
+    if(!dbNS) dbNS = await claude.use("db");
+    if(dbNS){
+      const snap = await dbNS.collection("results").get();
+      const remote = snap.docs.map(d=>d.data());
+      // merge by simple de-dup on name+startTime
+      const seen = new Set(results.map(r=>r.name+r.startTime));
+      remote.forEach(r=>{ if(!seen.has(r.name+r.startTime)){ results.push(r); seen.add(r.name+r.startTime);} });
+    }
+  }catch(e){ console.warn("db load failed, using local only", e); }
+  results.sort((a,b)=> new Date(b.startTime)-new Date(a.startTime));
+  renderTeacherTable(results);
+}
+function renderTeacherTable(results){
+  const panel = document.getElementById("teacherPanel");
+  if(!panel) return;
+  const avg = results.length? Math.round(results.reduce((s,r)=>s+r.score,0)/results.length):0;
+  const stats = `<div class="stats-row">
+    <div class="stat-box"><div class="n">${results.length}</div><div class="lbl">عدد الطلاب</div></div>
+    <div class="stat-box"><div class="n">${avg}%</div><div class="lbl">متوسط الدرجات</div></div>
+    <div class="stat-box"><div class="n">${results.filter(r=>r.score>=50).length}</div><div class="lbl">تجاوزوا 50%</div></div>
+  </div>`;
+  let rows = results.map(r=>`<tr>
+    <td>${r.name}</td><td>${r.className}</td><td>${r.code}</td><td>${r.score}%</td>
+    <td>${r.correctCount}</td><td>${r.wrongCount}</td><td>${r.wrongNums||'-'}</td>
+    <td>${new Date(r.startTime).toLocaleString('ar-EG')}</td><td>${new Date(r.endTime).toLocaleString('ar-EG')}</td>
+  </tr>`).join("");
+  panel.className="";
+  panel.innerHTML = `
+  <div class="lesson-header"><h2>👩‍🏫 لوحة تحكم المعلم</h2>
+    <div style="display:flex;gap:8px">
+      <button class="btn small" onclick="loadTeacherData()">🔄 تحديث</button>
+      <button class="btn gold small" onclick="exportExcel()">⬇️ تصدير Excel</button>
+    </div>
+  </div>
+  ${stats}
+  <div class="card wrap-x">
+    ${results.length? `<table class="results"><thead><tr>
+      <th>اسم الطالب</th><th>الفصل</th><th>الكود</th><th>الدرجة</th><th>صحيحة</th><th>خاطئة</th><th>أرقام الخاطئة</th><th>وقت البدء</th><th>وقت الانتهاء</th>
+    </tr></thead><tbody>${rows}</tbody></table>` : `<p class="center-msg">لا توجد نتائج بعد.</p>`}
+  </div>`;
+  window._teacherResults = results;
+}
+async function exportExcel(){
+  const results = window._teacherResults||[];
+  if(!results.length){ alert("لا توجد بيانات للتصدير."); return; }
+  const data = results.map(r=>({
+    "اسم الطالب": r.name, "الفصل": r.className, "الكود": r.code,
+    "الدرجة الكلية": r.score + "%", "عدد الأسئلة الصحيحة": r.correctCount,
+    "عدد الأسئلة الخاطئة": r.wrongCount, "أرقام الأسئلة الخاطئة": r.wrongNums||"-",
+    "وقت بدء الاختبار": new Date(r.startTime).toLocaleString('ar-EG'),
+    "وقت انتهاء الاختبار": new Date(r.endTime).toLocaleString('ar-EG')
+  }));
+  const ws = XLSX.utils.json_to_sheet(data);
+  ws['!cols'] = [{wch:22},{wch:10},{wch:10},{wch:12},{wch:14},{wch:14},{wch:20},{wch:20},{wch:20}];
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, "نتائج الطلاب");
+  const arr = XLSX.write(wb, {bookType:"xlsx", type:"array"});
+  const blob = new Blob([arr], {type:"application/octet-stream"});
+  try{
+    if(!downloadsNS) downloadsNS = await claude.use("downloads");
+    if(downloadsNS){
+      await downloadsNS.save({filename:"نتائج_الطلاب.xlsx", data:blob});
+    } else {
+      fallbackDownload(blob, "نتائج_الطلاب.xlsx");
+    }
+  }catch(e){ fallbackDownload(blob, "نتائج_الطلاب.xlsx"); }
+}
+function fallbackDownload(blob, filename){
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a"); a.href=url; a.download=filename; document.body.appendChild(a); a.click();
+  setTimeout(()=>{ URL.revokeObjectURL(url); a.remove(); }, 500);
+}
+
+/* ============================= HANDLERS ============================= */
+function attachHandlers(){
+  document.querySelectorAll("[data-lesson]").forEach(el=>{
+    el.onclick = ()=> gotoLesson(parseInt(el.dataset.lesson));
+  });
+  document.querySelectorAll("[data-tab]").forEach(el=>{
+    el.onclick = ()=>{ lessonTab = el.dataset.tab; render(); };
+  });
+}
+
+/* ============================= INIT ============================= */
+(async function init(){
+  try{ dbNS = await claude.use("db"); }catch(e){}
+  try{ downloadsNS = await claude.use("downloads"); }catch(e){}
+  render();
+  setInterval(tickTimer, 1000);
+})();
+</script>
+</body>
+</html>
